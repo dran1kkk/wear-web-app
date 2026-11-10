@@ -151,7 +151,7 @@ public class MainActivity extends Activity {
 
     private void showQuestion(int t, int qi) throws Exception {
         JSONObject q = tickets.getJSONObject(t).getJSONArray("questions").getJSONObject(qi);
-        content.addView(text(q.getInt("num") + ". " + q.getString("title"), 14, ACCENT, Typeface.BOLD));
+        content.addView(text(Fmt.format(q.getInt("num") + ". " + q.getString("title")), 14, ACCENT, Typeface.BOLD));
         JSONArray blocks = q.getJSONArray("blocks");
         for (int i = 0; i < blocks.length(); i++) {
             JSONArray b = blocks.getJSONArray(i);
@@ -160,22 +160,28 @@ public class MainActivity extends Activity {
             TextView tv;
             switch (type) {
                 case "h":
-                    tv = text(s, 14, Color.WHITE, Typeface.BOLD);
+                    tv = text(Fmt.format(s), 14, Color.WHITE, Typeface.BOLD);
                     tv.setPadding(0, dp(8), 0, 0);
                     break;
                 case "b":
-                    tv = text(s, 13, 0xFFC9D1DC, Typeface.BOLD);
+                    tv = text(Fmt.format(s), 13, 0xFFC9D1DC, Typeface.BOLD);
                     break;
                 case "f":
-                    tv = text(s, 13, 0xFFFFD27F, Typeface.NORMAL);
+                case "s":
+                    tv = text(Fmt.format(s), 14, 0xFFFFD27F, Typeface.NORMAL);
+                    tv.setTypeface(Typeface.SERIF);
+                    break;
+                case "m":
+                    tv = text(s.replace("'", "\u2032"), 11, 0xFFFFD27F, Typeface.NORMAL);
+                    tv.setTypeface(Typeface.MONOSPACE);
                     break;
                 case "ans":
-                    tv = text("Ответ: " + s, 14, 0xFF7DDC8B, Typeface.BOLD);
+                    tv = text(Fmt.format("Ответ: " + s), 14, 0xFF7DDC8B, Typeface.BOLD);
                     tv.setBackground(round(0xFF16301D, 10));
                     tv.setPadding(dp(8), dp(6), dp(8), dp(6));
                     break;
                 default:
-                    tv = text(s, 13, 0xFFE6EAF0, Typeface.NORMAL);
+                    tv = text(Fmt.format(s), 13, 0xFFE6EAF0, Typeface.NORMAL);
             }
             tv.setGravity(Gravity.START);
             content.addView(tv, new LinearLayout.LayoutParams(
@@ -199,7 +205,7 @@ public class MainActivity extends Activity {
         return lp;
     }
 
-    private TextView text(String s, float sp, int color, int style) {
+    private TextView text(CharSequence s, float sp, int color, int style) {
         TextView tv = new TextView(this);
         tv.setText(s);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
